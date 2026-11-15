@@ -34,7 +34,7 @@ create policy "Guests can read items"
 -- ...but only the SAFE columns. The claimer's name and secret token
 -- are never readable by guests, even if someone pokes at the API.
 revoke all on public.items from anon, authenticated;
-grant select (id, name, image_url, price, link, position, is_claimed)
+grant select (id, name, image_url, price, link, position, is_claimed, created_at)
   on public.items to anon;
 
 -- The server (secret key = service_role) gets full access.
