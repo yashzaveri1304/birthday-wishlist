@@ -29,7 +29,10 @@ function GiftsSkeleton() {
       aria-hidden
     >
       {[0, 1, 2].map((i) => (
-        <div key={i} className="h-[23rem] rounded-[1.75rem] bg-white/60" />
+        <div
+          key={i}
+          className="aspect-[4/5] rounded-[1.25rem] bg-petal sm:rounded-[1.6rem]"
+        />
       ))}
     </div>
   );
@@ -43,13 +46,13 @@ export default function Home() {
         owner={process.env.NEXT_PUBLIC_OWNER_NAME || "Aashni Shah"}
         birthday={process.env.NEXT_PUBLIC_BIRTHDAY || "2009-12-29"}
       />
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-4 sm:px-6">
+      <main className="mx-auto max-w-5xl px-5 pb-24 sm:px-8">
         <Suspense fallback={<GiftsSkeleton />}>
           <Gifts />
         </Suspense>
       </main>
-      <footer className="pb-10 text-center text-xs text-ink-soft/70">
-        Made with love (and a little confetti) ✦
+      <footer className="pb-12 text-center font-display text-sm text-ink-soft italic">
+        With love, on the 29th
       </footer>
     </MotionProvider>
   );

@@ -182,14 +182,14 @@ export function AdminApp() {
         )}
       </div>
 
-      <p className="mb-4 rounded-2xl bg-white/70 px-4 py-3 text-sm text-ink-soft">
+      <p className="mb-4 rounded-2xl bg-petal px-4 py-3 text-sm text-ink-soft">
         {reveal
           ? "Spoilers are ON: you can see who is getting what."
           : "No-spoilers mode is on: you can’t see what has been claimed. Your surprise is safe."}
       </p>
 
       {items.length === 0 && (
-        <p className="rounded-3xl bg-white/70 p-8 text-center text-ink-soft">
+        <p className="rounded-3xl bg-petal p-8 text-center text-ink-soft">
           No gifts yet. Tap “Add a gift” to start.
         </p>
       )}
@@ -204,14 +204,14 @@ export function AdminApp() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ type: "spring", stiffness: 400, damping: 34 }}
-              className="flex items-center gap-3 rounded-3xl border border-white bg-white/85 p-3"
+              className="flex items-center gap-3 rounded-3xl border border-line bg-white p-3"
             >
               <div className="flex flex-col">
                 <button
                   aria-label="Move up"
                   onClick={() => move(i, -1)}
                   disabled={i === 0}
-                  className="h-8 w-8 rounded-full text-ink-soft hover:bg-cream disabled:opacity-25"
+                  className="h-8 w-8 rounded-full text-ink-soft hover:bg-petal disabled:opacity-25"
                 >
                   ▲
                 </button>
@@ -219,12 +219,12 @@ export function AdminApp() {
                   aria-label="Move down"
                   onClick={() => move(i, 1)}
                   disabled={i === items.length - 1}
-                  className="h-8 w-8 rounded-full text-ink-soft hover:bg-cream disabled:opacity-25"
+                  className="h-8 w-8 rounded-full text-ink-soft hover:bg-petal disabled:opacity-25"
                 >
                   ▼
                 </button>
               </div>
-              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-peach to-blush">
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-petal">
                 {item.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -381,7 +381,7 @@ function Login({ onDone }: { onDone: () => void }) {
         onSubmit={submit}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-sm space-y-4 rounded-[2rem] border border-white bg-white/85 p-7 shadow-xl"
+        className="w-full max-w-sm space-y-4 rounded-[2rem] border border-line bg-white p-7 shadow-xl"
       >
         <h1 className="font-display text-3xl font-semibold text-ink">
           Admin 🔐
@@ -512,7 +512,7 @@ function ItemForm({
           Picture (optional)
         </span>
         <div className="flex items-center gap-3">
-          <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-peach to-blush">
+          <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-petal">
             {form.image_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img

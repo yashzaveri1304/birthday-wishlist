@@ -1,15 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Bodoni_Moda, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const bodoni = Bodoni_Moda({
+  variable: "--font-bodoni",
   subsets: ["latin"],
-  axes: ["SOFT", "WONK", "opsz"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
 });
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fff8f2",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
 };
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${dmSans.variable} antialiased`}
+      className={`${bodoni.variable} ${hanken.variable} antialiased`}
     >
       <body className="min-h-dvh">{children}</body>
     </html>

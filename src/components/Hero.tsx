@@ -1,15 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
+import { Bow } from "./Bow";
 import { Countdown } from "./Countdown";
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 const letter = {
-  hidden: { opacity: 0, y: 28, rotate: -8 },
-  show: {
-    opacity: 1,
-    y: 0,
-    rotate: 0,
-    transition: { type: "spring" as const, stiffness: 420, damping: 18 },
-  },
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
 };
 
 export function Hero({
@@ -19,36 +17,49 @@ export function Hero({
   owner?: string;
   birthday?: string;
 }) {
-  const line1 = owner ? `${owner}'s` : "My";
-  const line2 = "birthday wishlist";
-  const words = [...line1.split(" "), ...line2.split(" ")];
+  const first = (owner ?? "").trim().split(/\s+/)[0];
+  const headline = first ? `${first}’s wishlist` : "My birthday wishlist";
+  const words = headline.split(" ");
 
   return (
-    <header className="relative mx-auto max-w-3xl px-5 pb-6 pt-14 text-center sm:pt-20">
-      <motion.p
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-4 inline-flex items-center gap-2 rounded-full border border-line bg-white/70 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-ink-soft"
-      >
-        <span aria-hidden>✦</span> A little list of happy things{" "}
-        <span aria-hidden>✦</span>
-      </motion.p>
+    <header className="relative px-5 pb-10 pt-10 text-center sm:pb-14 sm:pt-14">
+      {/* The ribbon: one orchestrated opening moment */}
+      <div className="relative mx-auto mb-8 h-24 sm:mb-10 sm:h-28" aria-hidden>
+        <motion.div
+          className="satin absolute inset-x-[-20px] top-[38%] h-[14px] shadow-[0_6px_14px_-8px_rgba(166,60,100,0.5)] sm:h-[16px]"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.1, ease: EASE }}
+          style={{ transformOrigin: "50% 50%" }}
+        />
+        <motion.div
+          className="absolute left-1/2 top-0 w-36 -translate-x-1/2 sm:w-44"
+          initial={{ opacity: 0, scale: 0.6, y: -6 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 210,
+            damping: 15,
+            delay: 0.55,
+          }}
+        >
+          <Bow
+            className="h-auto w-full drop-shadow-[0_8px_10px_rgba(166,60,100,0.18)]"
+            idPrefix="hero"
+          />
+        </motion.div>
+      </div>
 
       <h1
-        aria-label={`${line1} ${line2}`}
-        className="font-display text-[2.7rem] leading-[1.02] font-semibold tracking-tight text-ink sm:text-7xl"
-        style={{ fontVariationSettings: '"SOFT" 100, "WONK" 1' }}
+        aria-label={headline}
+        className="mx-auto max-w-4xl font-display text-[3.4rem] leading-[0.95] font-medium tracking-[-0.02em] text-ink italic sm:text-[6.5rem]"
       >
         <motion.span
           aria-hidden
-          className="inline"
           initial="hidden"
           animate="show"
           variants={{
-            show: {
-              transition: { staggerChildren: 0.035, delayChildren: 0.15 },
-            },
+            show: { transition: { staggerChildren: 0.04, delayChildren: 0.9 } },
           }}
         >
           {words.map((word, wi) => (
@@ -57,7 +68,7 @@ export function Hero({
                 <motion.span
                   key={ci}
                   variants={letter}
-                  className={`inline-block ${wi >= line1.split(" ").length ? "" : "italic text-coral"}`}
+                  className="inline-block"
                 >
                   {ch}
                 </motion.span>
@@ -70,18 +81,17 @@ export function Hero({
         </motion.span>
       </h1>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
-        className="mx-auto mt-5 max-w-md text-base leading-relaxed text-ink-soft sm:text-lg"
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.8, ease: EASE }}
       >
-        Pick something, tap{" "}
-        <strong className="font-semibold text-ink">“I’ll get this”</strong>, and
-        it’s yours to give. Nobody else will see who chose what.
-      </motion.p>
-
-      {birthday && <Countdown birthday={birthday} />}
+        {birthday && <Countdown birthday={birthday} />}
+        <p className="mx-auto mt-6 max-w-[34ch] text-[0.98rem] leading-relaxed text-ink-soft sm:text-lg">
+          Choose a gift and tap “I’ll get this” to reserve it. Other guests only
+          see that it’s taken, never who took it.
+        </p>
+      </motion.div>
     </header>
   );
 }

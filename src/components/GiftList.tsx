@@ -20,7 +20,7 @@ type ClaimState =
   | { item: PublicItem; phase: "form" | "loading"; error?: string }
   | { item: PublicItem; phase: "lost" };
 
-const CONFETTI_COLORS = ["#f2695c", "#e3a93c", "#d6c4f3", "#c6ebdc", "#ffd8b5"];
+const CONFETTI_COLORS = ["#f7ccd8", "#eba2b7", "#c24f7a", "#e9c9a8", "#ffffff"];
 
 async function celebrate(el: HTMLElement | null) {
   // Loaded only when needed; runs after the claim already succeeded.
@@ -181,8 +181,8 @@ export function GiftList({ initialItems }: { initialItems: PublicItem[] }) {
 
   if (items.length === 0) {
     return (
-      <p className="mx-auto max-w-sm rounded-3xl bg-white/70 p-8 text-center text-ink-soft">
-        The list is still being wrapped. Check back soon! 🎀
+      <p className="mx-auto max-w-sm text-center font-display text-xl text-ink-soft italic">
+        Gifts are still being added. Check back soon.
       </p>
     );
   }
@@ -191,13 +191,13 @@ export function GiftList({ initialItems }: { initialItems: PublicItem[] }) {
 
   return (
     <>
-      <p className="mb-5 text-center text-sm text-ink-soft">
+      <p className="mb-8 border-t border-line pt-8 text-center text-sm text-ink-soft sm:mb-10">
         {openCount === 0
-          ? "Everything’s been claimed. You’re all amazing 💛"
-          : `${openCount} of ${items.length} still up for grabs`}
+          ? "Every gift has been claimed. Thank you, everyone."
+          : `${openCount} of ${items.length} gifts still available`}
       </p>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-11 sm:gap-x-7 sm:gap-y-14 lg:grid-cols-3">
         {items.map((item, i) => (
           <GiftCard
             key={item.id}
@@ -286,7 +286,7 @@ export function GiftList({ initialItems }: { initialItems: PublicItem[] }) {
                     <span className="sr-only">Claiming…</span>
                   </>
                 ) : (
-                  "I’ll get this 🎁"
+                  "I’ll get this"
                 )}
               </button>
             </div>
