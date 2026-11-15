@@ -32,6 +32,8 @@ export const GiftCard = forwardRef<HTMLElement, Props>(function GiftCard(
       initial={{ opacity: 0, y: 26 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+      layout="position"
+      exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.25 } }}
       transition={{ duration: 0.7, ease: EASE, delay: (index % 3) * 0.08 }}
       className="group flex flex-col"
     >

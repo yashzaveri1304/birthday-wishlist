@@ -1,4 +1,5 @@
 "use client";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   useCallback,
   useEffect,
@@ -24,22 +25,44 @@ const CONFETTI_COLORS = ["#f7ccd8", "#eba2b7", "#c24f7a", "#e9c9a8", "#ffffff"];
 
 async function celebrate(el: HTMLElement | null) {
   // Loaded only when needed; runs after the claim already succeeded.
+  if (typeof navigator !== "undefined" && "vibrate" in navigator)
+    navigator.vibrate?.(25);
   const confetti = (await import("canvas-confetti")).default;
   const rect = el?.getBoundingClientRect();
   const origin = rect
     ? {
         x: (rect.left + rect.width / 2) / window.innerWidth,
-        y: (rect.top + rect.height * 0.6) / window.innerHeight,
+        y: (rect.top + rect.height * 0.45) / window.innerHeight,
       }
-    : { x: 0.5, y: 0.6 };
-  confetti({
-    particleCount: 90,
-    spread: 75,
-    startVelocity: 38,
+    : { x: 0.5, y: 0.5 };
+  // Soft rose petals instead of generic confetti.
+  const petal = confetti.shapeFromPath({
+    path: "M6 0 C10 3 12 8 6 16 C0 8 2 3 6 0 Z",
+  });
+  const shared = {
     origin,
     colors: CONFETTI_COLORS,
     disableForReducedMotion: true,
+    shapes: [petal, "circle" as const],
+    ticks: 260,
+    gravity: 0.55,
+    decay: 0.92,
+    drift: 0.4,
+  };
+  confetti({
+    ...shared,
+    particleCount: 46,
+    spread: 70,
+    startVelocity: 30,
+    scalar: 1.4,
+  });
+  confetti({
+    ...shared,
+    particleCount: 24,
+    spread: 110,
+    startVelocity: 22,
     scalar: 0.9,
+    drift: -0.4,
   });
 }
 
@@ -54,6 +77,7 @@ export function GiftList({ initialItems }: { initialItems: PublicItem[] }) {
   const [name, setName] = useState("");
   const [unclaimItem, setUnclaimItem] = useState<PublicItem | null>(null);
   const [unclaimBusy, setUnclaimBusy] = useState(false);
+  const [onlyOpen, setOnlyOpen] = useState(false);
   const [unclaimError, setUnclaimError] = useState("");
   const cardRefs = useRef<Record<string, HTMLElement | null>>({});
 
@@ -191,32 +215,78 @@ export function GiftList({ initialItems }: { initialItems: PublicItem[] }) {
 
   return (
     <>
-      <p className="mb-8 border-t border-line pt-8 text-center text-sm text-ink-soft sm:mb-10">
-        {openCount === 0
-          ? "Every gift has been claimed. Thank you, everyone."
-          : `${openCount} of ${items.length} gifts still available`}
-      </p>
+      <div className="mb-9 flex flex-col items-center gap-4 border-t border-line pt-8 sm:mb-11 sm:flex-row sm:justify-between">
+        <p className="text-sm text-ink-soft">
+          {openCount === 0
+            ? "Every gift has been claimed. Thank you, everyone."
+            : `${openCount} of ${items.length} gifts still available`}
+        </p>
+        {openCount > 0 && openCount < items.length && (
+          <div
+            role="radiogroup"
+            aria-label="Show gifts"
+            className="inline-flex rounded-full bg-petal p-1"
+          >
+            {[
+              { value: false, label: "All gifts" },
+              { value: true, label: "Still available" },
+            ].map((opt) => {
+              const active = onlyOpen === opt.value;
+              return (
+                <button
+                  key={opt.label}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setOnlyOpen(opt.value)}
+                  className={`relative min-h-10 rounded-full px-4 text-sm transition-colors ${active ? "text-ink" : "text-ink-soft hover:text-ink"}`}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="filter-pill"
+                      className="absolute inset-0 rounded-full bg-white shadow-[0_4px_14px_-6px_rgba(166,60,100,0.35)]"
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 34,
+                      }}
+                    />
+                  )}
+                  <span className="relative">{opt.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-11 sm:gap-x-7 sm:gap-y-14 lg:grid-cols-3">
-        {items.map((item, i) => (
-          <GiftCard
-            key={item.id}
-            ref={(el) => {
-              cardRefs.current[item.id] = el;
-            }}
-            item={item}
-            index={i}
-            mine={item.is_claimed && Boolean(tokens[item.id])}
-            onClaim={() => {
-              if (!name) setName(loadName());
-              setClaim({ item, phase: "form" });
-            }}
-            onUnclaim={() => {
-              setUnclaimError("");
-              setUnclaimItem(item);
-            }}
-          />
-        ))}
+        <AnimatePresence mode="popLayout" initial={false}>
+          {items
+            .filter(
+              (item) =>
+                !onlyOpen || !item.is_claimed || Boolean(tokens[item.id]),
+            )
+            .map((item, i) => (
+              <GiftCard
+                key={item.id}
+                ref={(el) => {
+                  cardRefs.current[item.id] = el;
+                }}
+                item={item}
+                index={i}
+                mine={item.is_claimed && Boolean(tokens[item.id])}
+                onClaim={() => {
+                  if (!name) setName(loadName());
+                  setClaim({ item, phase: "form" });
+                }}
+                onUnclaim={() => {
+                  setUnclaimError("");
+                  setUnclaimItem(item);
+                }}
+              />
+            ))}
+        </AnimatePresence>
       </div>
 
       {/* Claim popup */}

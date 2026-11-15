@@ -1,0 +1,19 @@
+// The satin bow as a standalone SVG string, for icons and share images.
+export const BOW_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150">
+<defs>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbdce5"/><stop offset="0.5" stop-color="#eda5ba"/><stop offset="1" stop-color="#f5bccc"/></linearGradient>
+<linearGradient id="d" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9819c" stop-opacity="0.55"/><stop offset="1" stop-color="#d9819c" stop-opacity="0"/></linearGradient>
+</defs>
+<path d="M114 70 C100 96 84 118 62 140 L84 138 L92 150 C104 124 116 98 124 74 Z" fill="url(#s)"/>
+<path d="M126 70 C140 96 156 118 178 140 L156 138 L148 150 C136 124 124 98 116 74 Z" fill="url(#s)"/>
+<path d="M120 62 C96 28 44 10 30 38 C18 64 52 86 120 70 Z" fill="url(#s)"/>
+<path d="M120 62 C144 28 196 10 210 38 C222 64 188 86 120 70 Z" fill="url(#s)"/>
+<path d="M120 64 C100 44 66 34 52 44 C70 46 96 56 120 68 Z" fill="url(#d)"/>
+<path d="M120 64 C140 44 174 34 188 44 C170 46 144 56 120 68 Z" fill="url(#d)"/>
+<path d="M44 34 C58 22 84 26 104 40" stroke="#fff" stroke-opacity="0.6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M196 34 C182 22 156 26 136 40" stroke="#fff" stroke-opacity="0.6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<rect x="107" y="52" width="26" height="28" rx="9" fill="url(#s)"/>
+<rect x="111" y="56" width="8" height="18" rx="4" fill="#fff" fill-opacity="0.45"/>
+</svg>`;
+
+export const BOW_DATA_URI = `data:image/svg+xml;base64,${Buffer.from(BOW_SVG).toString("base64")}`;

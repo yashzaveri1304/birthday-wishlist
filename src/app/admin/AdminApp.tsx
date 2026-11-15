@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { Modal } from "@/components/Modal";
+import { Bow } from "@/components/Bow";
 import type { AdminItem } from "@/lib/types";
 import { resizeImage } from "./resize";
 
@@ -233,8 +234,8 @@ export function AdminApp() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-2xl">
-                    🎁
+                  <div className="flex h-full items-center justify-center">
+                    <Bow className="w-3/4" idPrefix="admin" />
                   </div>
                 )}
               </div>
@@ -429,6 +430,42 @@ function ItemForm({
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [filling, setFilling] = useState(false);
+  const [fillNote, setFillNote] = useState("");
+
+  async function fillFromLink() {
+    setFilling(true);
+    setFillNote("");
+    setError("");
+    const { ok, status, data } = await api<{
+      name?: string;
+      price?: string;
+      image_url?: string;
+      error?: string;
+    }>("/api/admin/preview", jsonInit("POST", { url: form.link.trim() }));
+    setFilling(false);
+    if (status === 401) return onUnauthorized();
+    if (!ok)
+      return setFillNote(
+        data.error ??
+          "Couldn’t read that page. Please type the details instead.",
+      );
+    // Fill in what we found, without overwriting anything already typed.
+    setForm((f) => ({
+      ...f,
+      name: f.name || data.name || "",
+      price: f.price || data.price || "",
+      image_url: f.image_url || data.image_url || "",
+    }));
+    const got = [
+      data.name && "name",
+      data.price && "price",
+      data.image_url && "picture",
+    ].filter(Boolean);
+    setFillNote(
+      `Filled in the ${got.join(", ")}. Check it looks right before saving.`,
+    );
+  }
 
   const set = (k: keyof Draft) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -475,6 +512,34 @@ function ItemForm({
       onSubmit={save}
       className="max-h-[70dvh] space-y-3 overflow-y-auto pb-1"
     >
+      <div>
+        <label htmlFor="gift-link" className="mb-1 block text-sm font-medium">
+          Shop link
+        </label>
+        <div className="flex gap-2">
+          <input
+            id="gift-link"
+            type="url"
+            value={form.link}
+            onChange={set("link")}
+            className={input}
+            placeholder="Paste a link from any shop"
+          />
+          <button
+            type="button"
+            onClick={fillFromLink}
+            disabled={filling || !/^https?:\/\//i.test(form.link.trim())}
+            className={`${btn} shrink-0 bg-blush text-ink hover:bg-satin`}
+          >
+            {filling ? (
+              <span className="spinner" aria-label="Reading the shop page" />
+            ) : (
+              "Fill from link"
+            )}
+          </button>
+        </div>
+        {fillNote && <p className="mt-1.5 text-xs text-ink-soft">{fillNote}</p>}
+      </div>
       <label className="block">
         <span className="mb-1 block text-sm font-medium">Name *</span>
         <input
@@ -496,16 +561,6 @@ function ItemForm({
           placeholder="₹2,499 or $30"
         />
       </label>
-      <label className="block">
-        <span className="mb-1 block text-sm font-medium">Link to buy it</span>
-        <input
-          type="url"
-          value={form.link}
-          onChange={set("link")}
-          className={input}
-          placeholder="https://…"
-        />
-      </label>
 
       <div>
         <span className="mb-1 block text-sm font-medium">
@@ -521,8 +576,8 @@ function ItemForm({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-2xl">
-                🎁
+              <div className="flex h-full items-center justify-center">
+                <Bow className="w-3/4" idPrefix="admin" />
               </div>
             )}
           </div>
