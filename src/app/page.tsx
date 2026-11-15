@@ -40,8 +40,8 @@ export default function Home() {
     <MotionProvider>
       <Background />
       <Hero
-        owner={process.env.NEXT_PUBLIC_OWNER_NAME}
-        birthday={process.env.NEXT_PUBLIC_BIRTHDAY}
+        owner={process.env.NEXT_PUBLIC_OWNER_NAME || "Aashni Shah"}
+        birthday={process.env.NEXT_PUBLIC_BIRTHDAY || "2009-12-29"}
       />
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-4 sm:px-6">
         <Suspense fallback={<GiftsSkeleton />}>

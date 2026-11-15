@@ -13,7 +13,7 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
 });
 
-const owner = process.env.NEXT_PUBLIC_OWNER_NAME;
+const owner = process.env.NEXT_PUBLIC_OWNER_NAME || "Aashni Shah";
 
 export const metadata: Metadata = {
   title: owner ? `${owner}'s Birthday Wishlist` : "Birthday Wishlist",
